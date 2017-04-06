@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+	<head>
+		<title>AngularMarvel</title>
+	</head>
+
+	<body ng-app="angularMarvel">
+
+	<div ng-controller="angularMarvelController">
+
+		<input type="text" ng-change="myFunc()" ng-model="name">
+		{{name}}
+		<table>
+			<tr>
+				<td>Hero Name</td>
+				<td>(and, allegedly, photo)</td>
+			</tr>
+			<tr ng-repeat="hero in heroes">
+				<td>{{hero.name}}</td>
+				<td><img src={{hero.thumbnail.path}}.{{hero.thumbnail.extension}} style="max-width: 10%"></td>
+				<td></td>
+			</tr>
+
+		</table>
+	</div>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.7/angular.min.js"></script>
+	<script type="text/javascript">
+
+		var app = angular.module('angularMarvel', []);
+
+		app.controller("angularMarvelController",['$scope', '$http',function($scope, $http) {
+			$scope.name = "";
+			$scope.myFunc = function(){
+			// console.log("this is the url");
+			var url;
+
+			if ($scope.name == ""){
+				url = 'https://gateway.marvel.com/v1/public/characters?ts=11&apikey=7f81d1138b3b482d7f835e1ae3970f0a&hash=9280ad7d9a40a48a419d3d409e5e6213'
+			} else {
+				url = 'https://gateway.marvel.com/v1/public/characters?nameStartsWith=' + $scope.name +'&ts=11&apikey=7f81d1138b3b482d7f835e1ae3970f0a&hash=9280ad7d9a40a48a419d3d409e5e6213'
+			}
+			$http.get(url
+			).then(function(response) {
+				$scope.heroes = response.data.data.results
+
+			})
+		}
+		$scope.myFunc();
+
+		}]);
+
+	</script>
+	</body>
+</html>
